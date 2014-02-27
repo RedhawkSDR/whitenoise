@@ -19,33 +19,41 @@ program.  If not, see http://www.gnu.org/licenses/.
 <!DOCTYPE properties PUBLIC "-//JTRS//DTD SCA V2.2.2 PRF//EN" "properties.dtd">
 <properties>
   <simple id="mean" mode="readwrite" type="float">
+    <description>Average value of the outupt signal</description>
     <value>0.0</value>
     <kind kindtype="configure"/>
     <action type="external"/>
   </simple>
   <simple id="stddev" mode="readwrite" type="float">
+    <description>standard devation of the ouput signal</description>
     <value>1.0</value>
     <kind kindtype="configure"/>
     <action type="external"/>
   </simple>
   <simple id="xfer_len" mode="readwrite" type="long">
+    <description>Number of samples per packet</description>
     <value>16384</value>
     <kind kindtype="configure"/>
     <action type="external"/>
   </simple>
   <simple id="packetTime" mode="readwrite" type="double">
+    <description>Time stamp associated with the last packet.</description>
     <value>0.0</value>
     <kind kindtype="configure"/>
     <action type="external"/>
   </simple>
   <struct id="sri" mode="readwrite">
+    <description>values used for bulkio SRI</description>
     <simple id="xdelta" type="float">
+      <description>bulkio sri xdelta value:  1.0/sampleRate </description>
       <value>1.0</value>
     </simple>
     <simple id="complex" type="boolean">
+      <description>set whether output data samples are complex or not</description>
       <value>false</value>
     </simple>
     <simple id="streamID" type="string">
+      <description>bulkio sri streamID associated this this output signal</description>
       <value>streamid</value>
     </simple>
     <configurationkind kindtype="configure"/>
