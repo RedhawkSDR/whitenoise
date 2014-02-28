@@ -19,13 +19,13 @@ program.  If not, see http://www.gnu.org/licenses/.
 <!DOCTYPE properties PUBLIC "-//JTRS//DTD SCA V2.2.2 PRF//EN" "properties.dtd">
 <properties>
   <simple id="mean" mode="readwrite" type="float">
-    <description>Average value of the outupt signal</description>
+    <description>Average value of the output signal</description>
     <value>0.0</value>
     <kind kindtype="configure"/>
     <action type="external"/>
   </simple>
   <simple id="stddev" mode="readwrite" type="float">
-    <description>standard devation of the ouput signal</description>
+    <description>Standard deviation of the output signal</description>
     <value>1.0</value>
     <kind kindtype="configure"/>
     <action type="external"/>
@@ -45,7 +45,7 @@ program.  If not, see http://www.gnu.org/licenses/.
   <struct id="sri" mode="readwrite">
     <description>values used for bulkio SRI</description>
     <simple id="xdelta" type="float">
-      <description>bulkio sri xdelta value:  1.0/sampleRate </description>
+      <description>bulkio sri xdelta value: 1.0/sampleRate</description>
       <value>1.0</value>
     </simple>
     <simple id="complex" type="boolean">
@@ -53,7 +53,7 @@ program.  If not, see http://www.gnu.org/licenses/.
       <value>false</value>
     </simple>
     <simple id="streamID" type="string">
-      <description>bulkio sri streamID associated this this output signal</description>
+      <description>bulkio sri streamID associated this output signal</description>
       <value>streamid</value>
     </simple>
     <configurationkind kindtype="configure"/>
