@@ -23,19 +23,17 @@
     AUTO-GENERATED CODE. DO NOT MODIFY
 
 *******************************************************************************************/
-
 #include <ossie/CorbaUtils.h>
-#include <ossie/PropertyInterface.h>
 
 struct sri_struct {
-	sri_struct ()
-	{
-		xdelta = 1.0;
-		complex = false;
-		streamID = "streamid";
-	};
+    sri_struct ()
+    {
+        xdelta = 1.0;
+        complex = false;
+        streamID = "streamid";
+    };
 
-    std::string getId() {
+    static std::string getId() {
         return std::string("sri");
     };
 
@@ -52,10 +50,10 @@ inline bool operator>>= (const CORBA::Any& a, sri_struct& s) {
         if (!strcmp("xdelta", props[idx].id)) {
             if (!(props[idx].value >>= s.xdelta)) return false;
         }
-        if (!strcmp("complex", props[idx].id)) {
+        else if (!strcmp("complex", props[idx].id)) {
             if (!(props[idx].value >>= s.complex)) return false;
         }
-        if (!strcmp("streamID", props[idx].id)) {
+        else if (!strcmp("streamID", props[idx].id)) {
             if (!(props[idx].value >>= s.streamID)) return false;
         }
     }
@@ -87,26 +85,6 @@ inline bool operator== (const sri_struct& s1, const sri_struct& s2) {
 inline bool operator!= (const sri_struct& s1, const sri_struct& s2) {
     return !(s1==s2);
 };
-
-template<> inline short StructProperty<sri_struct>::compare (const CORBA::Any& a) {
-    if (super::isNil_) {
-        if (a.type()->kind() == (CORBA::tk_null)) {
-            return 0;
-        }
-        return 1;
-    }
-
-    sri_struct tmp;
-    if (fromAny(a, tmp)) {
-        if (tmp != this->value_) {
-            return 1;
-        }
-
-        return 0;
-    } else {
-        return 1;
-    }
-}
 
 
 #endif
