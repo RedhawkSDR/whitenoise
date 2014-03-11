@@ -22,7 +22,7 @@ program.  If not, see http://www.gnu.org/licenses/.
   <author>
     <name>null</name>
   </author>
-  <description>Random gaussian white noise signal generator in which output signal has equal energy at all frequency components.</description>
+  <description>Random gaussian white noise signal generator in which the output signal has equal energy at all frequency components.</description>
   <propertyfile type="PRF">
     <localfile name="whitenoise.prf.xml"/>
   </propertyfile>
