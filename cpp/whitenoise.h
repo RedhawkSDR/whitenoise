@@ -32,11 +32,8 @@ class whitenoise_i : public whitenoise_base
         int serviceFunction();
         void initialize() throw (CF::LifeCycle::InitializeError, CORBA::SystemException);
         std::vector<float> output;
-        void newSri(const std::string& sriStr);
-        void newXferLen(const std::string& sriStr);
+        void newSri(const sri_struct* oldSri, const sri_struct* newSri);
 
-        void configure (const CF::Properties& configProperties) throw (CF::PropertySet::PartialConfiguration,
-                CF::PropertySet::InvalidConfiguration, CORBA::SystemException);
         boost::mutex processLock;
         std::string streamID;
         bool sriChanged;

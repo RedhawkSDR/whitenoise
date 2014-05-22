@@ -35,17 +35,11 @@ whitenoise_i::whitenoise_i(const char *uuid, const char *label) :
     lastTime(0)
 {
 	std::string s = "sri";
-	setPropertyChangeListener(s, this, &whitenoise_i::newSri);
+	addPropertyChangeListener(s, this, &whitenoise_i::newSri);
 }
 
 whitenoise_i::~whitenoise_i()
 {
-}
-
-void whitenoise_i::configure (const CF::Properties& configProperties) throw (CF::PropertySet::PartialConfiguration,
-        CF::PropertySet::InvalidConfiguration, CORBA::SystemException)
-{
-	whitenoise_base::configure(configProperties);
 }
 
 void whitenoise_i::initialize() throw (CF::LifeCycle::InitializeError, CORBA::SystemException)
@@ -73,34 +67,29 @@ void whitenoise_i::initialize() throw (CF::LifeCycle::InitializeError, CORBA::Sy
 	sriChanged = true;
 }
 
-void whitenoise_i::newSri(const std::string& sriStr)
+void whitenoise_i::newSri(const sri_struct* oldSri, const sri_struct* newSri)
 {
-	if (sriStr !="sri")
-	{
-		std::cout<<"wrong string value "<<sriStr<<std::endl;
-	}
-	else
-	{
-		boost::mutex::scoped_lock lock(processLock);
-		new_sri.xdelta = sri.xdelta;
-		if (sri.complex)
-			new_sri.mode = 1;
-		else
-			new_sri.mode=0;
-		if ((!sri.streamID.empty()) && (sri.streamID !=streamID))
-			streamID = sri.streamID;
-		else if (streamID.empty())
-		{
-			//generate a new streamID
-			char uuidBuff[36];
-			uuid_t uuidGenerated;
-			uuid_generate_random(uuidGenerated);
-			uuid_unparse(uuidGenerated, uuidBuff);
-			streamID = uuidBuff;
-		}
-		new_sri.streamID = streamID.c_str();
-		sriChanged=true;
-	}
+    boost::mutex::scoped_lock lock(processLock);
+
+    new_sri.xdelta = sri.xdelta;
+    if (sri.complex)
+        new_sri.mode = 1;
+    else
+        new_sri.mode=0;
+
+    if ((!sri.streamID.empty()) && (sri.streamID !=streamID))
+        streamID = sri.streamID;
+    else if (streamID.empty())
+    {
+        //generate a new streamID
+        char uuidBuff[36];
+        uuid_t uuidGenerated;
+        uuid_generate_random(uuidGenerated);
+        uuid_unparse(uuidGenerated, uuidBuff);
+        streamID = uuidBuff;
+    }
+    new_sri.streamID = streamID.c_str();
+    sriChanged=true;
 }
 
 int whitenoise_i::serviceFunction()
