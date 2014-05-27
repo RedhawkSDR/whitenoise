@@ -69,8 +69,6 @@ void whitenoise_i::initialize() throw (CF::LifeCycle::InitializeError, CORBA::Sy
 
 void whitenoise_i::newSri(const sri_struct* oldSri, const sri_struct* newSri)
 {
-    boost::mutex::scoped_lock lock(processLock);
-
     new_sri.xdelta = sri.xdelta;
     if (sri.complex)
         new_sri.mode = 1;
@@ -146,7 +144,7 @@ int whitenoise_i::serviceFunction()
     assert(ptr==&output[output.size()]);
     if (resizeOut)
     	//remove the last element if output is requested
-    	output.resize(xfer_len);
+    	output.resize(numFloats-1);
 
     //good to go - lets update the time stamp
 

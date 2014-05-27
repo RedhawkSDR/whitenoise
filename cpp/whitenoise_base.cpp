@@ -29,74 +29,36 @@
 
 whitenoise_base::whitenoise_base(const char *uuid, const char *label) :
     Resource_impl(uuid, label),
-    serviceThread(0)
+    ThreadedComponent()
 {
-    construct();
+    loadProperties();
+
+    dataFloatOut = new bulkio::OutFloatPort("dataFloatOut");
+    addPort("dataFloatOut", dataFloatOut);
 }
 
-void whitenoise_base::construct()
+whitenoise_base::~whitenoise_base()
 {
-    Resource_impl::_started = false;
-    loadProperties();
-    serviceThread = 0;
-    
-    PortableServer::ObjectId_var oid;
-    dataFloatOut = new bulkio::OutFloatPort("dataFloatOut");
-    oid = ossie::corba::RootPOA()->activate_object(dataFloatOut);
-
-    registerOutPort(dataFloatOut, dataFloatOut->_this());
+    delete dataFloatOut;
+    dataFloatOut = 0;
 }
 
 /*******************************************************************************************
     Framework-level functions
     These functions are generally called by the framework to perform housekeeping.
 *******************************************************************************************/
-void whitenoise_base::initialize() throw (CF::LifeCycle::InitializeError, CORBA::SystemException)
-{
-}
-
 void whitenoise_base::start() throw (CORBA::SystemException, CF::Resource::StartError)
 {
-    boost::mutex::scoped_lock lock(serviceThreadLock);
-    if (serviceThread == 0) {
-        serviceThread = new ProcessThread<whitenoise_base>(this, 0.1);
-        serviceThread->start();
-    }
-    
-    if (!Resource_impl::started()) {
-    	Resource_impl::start();
-    }
+    Resource_impl::start();
+    ThreadedComponent::startThread();
 }
 
 void whitenoise_base::stop() throw (CORBA::SystemException, CF::Resource::StopError)
 {
-    boost::mutex::scoped_lock lock(serviceThreadLock);
-    // release the child thread (if it exists)
-    if (serviceThread != 0) {
-        if (!serviceThread->release(2)) {
-            throw CF::Resource::StopError(CF::CF_NOTSET, "Processing thread did not die");
-        }
-        serviceThread = 0;
+    Resource_impl::stop();
+    if (!ThreadedComponent::stopThread()) {
+        throw CF::Resource::StopError(CF::CF_NOTSET, "Processing thread did not die");
     }
-    
-    if (Resource_impl::started()) {
-    	Resource_impl::stop();
-    }
-}
-
-CORBA::Object_ptr whitenoise_base::getPort(const char* _id) throw (CORBA::SystemException, CF::PortSupplier::UnknownPort)
-{
-
-    std::map<std::string, Port_Provides_base_impl *>::iterator p_in = inPorts.find(std::string(_id));
-    if (p_in != inPorts.end()) {
-    }
-
-    std::map<std::string, CF::Port_var>::iterator p_out = outPorts_var.find(std::string(_id));
-    if (p_out != outPorts_var.end()) {
-        return CF::Port::_duplicate(p_out->second);
-    }
-
-    throw (CF::PortSupplier::UnknownPort());
 }
 
 void whitenoise_base::releaseObject() throw (CORBA::SystemException, CF::LifeCycle::ReleaseError)
@@ -107,12 +69,6 @@ void whitenoise_base::releaseObject() throw (CORBA::SystemException, CF::LifeCyc
     } catch (CF::Resource::StopError& ex) {
         // TODO - this should probably be logged instead of ignored
     }
-
-    // deactivate ports
-    releaseInPorts();
-    releaseOutPorts();
-
-    delete(dataFloatOut);
 
     Resource_impl::releaseObject();
 }
@@ -174,3 +130,5 @@ void whitenoise_base::loadProperties()
                 "configure");
 
 }
+
+

@@ -34,7 +34,6 @@ class whitenoise_i : public whitenoise_base
         std::vector<float> output;
         void newSri(const sri_struct* oldSri, const sri_struct* newSri);
 
-        boost::mutex processLock;
         std::string streamID;
         bool sriChanged;
         BULKIO::StreamSRI new_sri;
